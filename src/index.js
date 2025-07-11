@@ -16,9 +16,11 @@ async function cargarResumen() {
   }
 
   // Ordenar centros por código
-  const ordenados = [...data].sort(
-    (a, b) => parseInt(a.codigo_centro, 10) - parseInt(b.codigo_centro, 10)
-  );
+ const ordenados = [...data].sort((a, b) => {
+    const codA = a.codigo_centro?.toString().trim();
+    const codB = b.codigo_centro?.toString().trim();
+    return codA.localeCompare(codB);
+  });
 
   renderTabla(ordenados);
   renderGraficos(ordenados);
