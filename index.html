@@ -212,13 +212,29 @@
       }
     }
 
-    const porcentajeGeneral = totalGeneral?.porcentaje_participacion ?? 0;
+    // 🌡️ Buscar directamente el porcentaje desde la fila TOTAL GENERAL
+    const filaTotal = datos.find(d =>
+      typeof d.nombre_centro === 'string' &&
+      d.nombre_centro.trim().toUpperCase() === 'TOTAL GENERAL'
+    );
+
+    const porcentajeGeneral = filaTotal?.porcentaje_participacion ?? 0;
+
     const barra = document.getElementById('barraTermometro');
     const texto = document.getElementById('valorTermometro');
 
     if (barra && texto) {
       barra.style.width = `${porcentajeGeneral}%`;
-      texto.textContent = `${porcentajeGeneral}% participación`;
+    
+      if (porcentajeGeneral >= 70) {
+        barra.style.background = 'linear-gradient(90deg, #28a745, #66bb6a)';
+      } else if (porcentajeGeneral >= 40) {
+        barra.style.background = 'linear-gradient(90deg, #ffc107, #f9a825)';
+      } else {
+        barra.style.background = 'linear-gradient(90deg, #dc3545, #c2185b)';
+      }
+    
+      texto.textContent = `${porcentajeGeneral.toFixed(1)}% participación`;
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
