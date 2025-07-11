@@ -115,3 +115,8 @@ footer {
     transform: translateY(0);
   }
 }
+
+#grafico-participacion {
+  max-width: 480px;
+  margin: auto;
+}
