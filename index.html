@@ -116,34 +116,34 @@
 
     function renderTabla(datos) {
       const tbody = document.getElementById('tablaDatos');
-      tbody.innerHTML = '';
-
-      datos.forEach(item => {
-        const row = document.createElement('tr');
-
-        if (item.es_subtotal) {
-          row.classList.add(item.parroquia === '' ? 'total-general' : 'subtotal');
-        }
-
-        row.innerHTML = `
-          <td>${item.codigo_centro}</td>
-          <td>${item.nombre_centro || '—'}</td>
-          <td>${item.parroquia || '—'}</td>
-          <td>${item.electores}</td>
-          <td>${item.encuestados}</td>
-          <td>${item.si}</td>
-          <td>${item.no}</td>
-          <td>${item.nose}</td>
-          <td>${item.porcentaje_participacion}%</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    let graficoCircularChart;
-    let graficoBarrasChart;
-    
-    function renderGraficos(datos) {
+        tbody.innerHTML = '';
+  
+        datos.forEach(item => {
+          const row = document.createElement('tr');
+  
+          if (item.es_subtotal) {
+            row.classList.add(item.parroquia === '' ? 'total-general' : 'subtotal');
+          }
+  
+          row.innerHTML = `
+            <td>${item.codigo_centro}</td>
+            <td>${item.nombre_centro || '—'}</td>
+            <td>${item.parroquia || '—'}</td>
+            <td>${item.electores}</td>
+            <td>${item.encuestados}</td>
+            <td>${item.si}</td>
+            <td>${item.no}</td>
+            <td>${item.nose}</td>
+            <td>${item.porcentaje_participacion}%</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+  
+      let graficoCircularChart;
+      let graficoBarrasChart;
+  
+      function renderGraficos(datos) {
       // ⚙️ Preparar datos para gráfico de barras
       const centros = datos
         .filter(d => !d.es_subtotal)
@@ -153,7 +153,6 @@
         .filter(d => !d.es_subtotal)
         .map(d => d.porcentaje_participacion);
     
-      // 🔄 Destruir gráfico de barras anterior si existe
       if (graficoBarrasChart) graficoBarrasChart.destroy();
     
       graficoBarrasChart = new Chart(document.getElementById('graficoBarras'), {
@@ -169,23 +168,21 @@
         options: {
           responsive: true,
           plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, max: 100 }
-          }
+          scales: { y: { beginAtZero: true, max: 100 } }
         }
       });
     
-      // 🔎 Buscar fila TOTAL GENERAL (por nombre del centro)
-      const totalGeneral = datos.find(d =>
+      // 🔎 Buscar TOTAL GENERAL directamente por nombre exacto
+      const filaTotal = datos.find(d =>
         typeof d.nombre_centro === 'string' &&
-        d.nombre_centro.trim().toUpperCase().includes('TOTAL GENERAL')
+        d.nombre_centro.trim().toUpperCase() === 'TOTAL GENERAL'
       );
     
-      const totalSi = totalGeneral?.si ?? 0;
-      const totalNo = totalGeneral?.no ?? 0;
-      const totalNs = totalGeneral?.nose ?? 0;
+      const totalSi = filaTotal?.si ?? 0;
+      const totalNo = filaTotal?.no ?? 0;
+      const totalNs = filaTotal?.nose ?? 0;
+      const porcentajeGeneral = filaTotal?.porcentaje_participacion ?? 0;
     
-      // 🔄 Destruir gráfico circular anterior si existe
       if (graficoCircularChart) graficoCircularChart.destroy();
     
       graficoCircularChart = new Chart(document.getElementById('graficoCircular'), {
@@ -203,40 +200,32 @@
         }
       });
     
-      // 🧩 Ajustar tamaño visual del canvas (solo si no lo hiciste en el HTML)
       const canvasCircular = document.getElementById('graficoCircular');
       if (canvasCircular) {
         canvasCircular.style.maxWidth = '260px';
         canvasCircular.style.margin = 'auto';
         canvasCircular.style.display = 'block';
       }
-    }
-
-    // 🌡️ Buscar directamente el porcentaje desde la fila TOTAL GENERAL
-    const filaTotal = datos.find(d =>
-      typeof d.nombre_centro === 'string' &&
-      d.nombre_centro.trim().toUpperCase() === 'TOTAL GENERAL'
-    );
-
-    const porcentajeGeneral = filaTotal?.porcentaje_participacion ?? 0;
-
-    const barra = document.getElementById('barraTermometro');
-    const texto = document.getElementById('valorTermometro');
-
-    if (barra && texto) {
-      barra.style.width = `${porcentajeGeneral}%`;
     
-      if (porcentajeGeneral >= 70) {
-        barra.style.background = 'linear-gradient(90deg, #28a745, #66bb6a)';
-      } else if (porcentajeGeneral >= 40) {
-        barra.style.background = 'linear-gradient(90deg, #ffc107, #f9a825)';
-      } else {
-        barra.style.background = 'linear-gradient(90deg, #dc3545, #c2185b)';
+      // 🌡️ Actualizar termómetro
+      const barra = document.getElementById('barraTermometro');
+      const texto = document.getElementById('valorTermometro');
+    
+      if (barra && texto) {
+        barra.style.width = `${porcentajeGeneral}%`;
+    
+        if (porcentajeGeneral >= 70) {
+          barra.style.background = 'linear-gradient(90deg, #28a745, #66bb6a)';
+        } else if (porcentajeGeneral >= 40) {
+          barra.style.background = 'linear-gradient(90deg, #ffc107, #f9a825)';
+        } else {
+          barra.style.background = 'linear-gradient(90deg, #dc3545, #c2185b)';
+        }
+    
+        texto.textContent = `${porcentajeGeneral.toFixed(1)}% participación`;
       }
-    
-      texto.textContent = `${porcentajeGeneral.toFixed(1)}% participación`;
     }
-
+    
     document.addEventListener('DOMContentLoaded', async () => {
       await cargarResumen();
 
