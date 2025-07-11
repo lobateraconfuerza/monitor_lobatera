@@ -15,17 +15,20 @@ async function cargarResumen() {
     return;
   }
 
-  renderTabla(data);
-  renderGraficos(data);
+  // Ordenar centros por código
+  const ordenados = [...data].sort(
+    (a, b) => parseInt(a.codigo_centro, 10) - parseInt(b.codigo_centro, 10)
+  );
+
+  renderTabla(ordenados);
+  renderGraficos(ordenados);
 }
 
 function renderTabla(datos) {
   const tbody = document.getElementById('tablaDatos');
   tbody.innerHTML = '';
 
-  datos
-  .sort((a, b) => parseInt(a.codigo_centro) - parseInt(b.codigo_centro))
-  .forEach(item => {
+  datos.forEach(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${item.codigo_centro}</td>
@@ -46,7 +49,6 @@ function renderGraficos(datos) {
   const centros = datos.map(d => d.nombre_centro || d.codigo_centro);
   const participacion = datos.map(d => d.porcentaje_participacion);
 
-  // Gráfico de barras
   new Chart(document.getElementById('graficoBarras'), {
     type: 'bar',
     data: {
@@ -71,7 +73,6 @@ function renderGraficos(datos) {
     }
   });
 
-  // Gráfico circular con totales
   const totalSi = datos.reduce((acc, d) => acc + d.si, 0);
   const totalNo = datos.reduce((acc, d) => acc + d.no, 0);
   const totalNs = datos.reduce((acc, d) => acc + d.nose, 0);
@@ -94,7 +95,6 @@ function renderGraficos(datos) {
   });
 }
 
-// Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarResumen();
 
