@@ -1,6 +1,7 @@
-// index.js
 // Usar el cliente Supabase ya creado en index.html
 import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
+import { generarResumenTotalizado } from './generarResumenTotalizado.js';
+
 const supabase = window.supabase;
 
 async function cargarResumen() {
@@ -91,5 +92,30 @@ function renderGraficos(datos) {
   });
 }
 
-// Ejecutar todo al cargar la página
-document.addEventListener('DOMContentLoaded', cargarResumen);
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', async () => {
+  await cargarResumen();
+
+  const botonActualizar = document.getElementById('actualizarResumen');
+
+  if (botonActualizar) {
+    botonActualizar.addEventListener('click', async () => {
+      botonActualizar.disabled = true;
+      botonActualizar.textContent = '🔄 Actualizando...';
+
+      try {
+        await generarResumenTotalizado();
+        await cargarResumen();
+        botonActualizar.textContent = '✅ Actualizado correctamente';
+      } catch (err) {
+        console.error('⚠️ Error al actualizar resumen:', err);
+        botonActualizar.textContent = '⚠️ Falló actualización';
+      }
+
+      setTimeout(() => {
+        botonActualizar.textContent = '📡 Actualizar resumen';
+        botonActualizar.disabled = false;
+      }, 3000);
+    });
+  }
+});
