@@ -167,9 +167,12 @@
           }]
         },
         options: {
+          indexAxis: 'y',
           responsive: true,
           plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, max: 100 } }
+          scales: {
+            x: { beginAtZero: true, max: 100 }
+          }
         }
       });
     
