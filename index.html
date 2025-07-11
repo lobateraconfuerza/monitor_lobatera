@@ -42,6 +42,7 @@
         <div class="barra-interna" id="barraTermometro"></div>
       </div>
       <p id="valorTermometro">—%</p>
+      <p id="nivelParticipacion">Nivel: —</p>
     </section>
 
     <section id="grafico-participacion">
@@ -214,17 +215,23 @@
       if (barra && texto) {
         barra.style.width = `${porcentajeGeneral}%`;
     
+        const nivel = document.getElementById('nivelParticipacion');
+
+      if (nivel) {
         if (porcentajeGeneral >= 70) {
-          barra.style.background = 'linear-gradient(90deg, #28a745, #66bb6a)';
+          nivel.textContent = 'Nivel: Alta participación 👏';
         } else if (porcentajeGeneral >= 40) {
-          barra.style.background = 'linear-gradient(90deg, #ffc107, #f9a825)';
+          nivel.textContent = 'Nivel: Participación moderada 🔄';
         } else {
-          barra.style.background = 'linear-gradient(90deg, #dc3545, #c2185b)';
+          nivel.textContent = 'Nivel: Participación baja 💤';
         }
+      }
     
         texto.textContent = `${porcentajeGeneral.toFixed(1)}% participación`;
       }
+        
     }
+    
     
     document.addEventListener('DOMContentLoaded', async () => {
       await cargarResumen();
