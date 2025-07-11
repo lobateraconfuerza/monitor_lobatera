@@ -160,9 +160,11 @@
         }
       });
 
-      const totalSi = datos.reduce((acc, d) => acc + d.si, 0);
-      const totalNo = datos.reduce((acc, d) => acc + d.no, 0);
-      const totalNs = datos.reduce((acc, d) => acc + d.nose, 0);
+      const totalGeneral = datos.find(d => d.parroquia === '' && d.es_subtotal);
+
+      const totalSi = totalGeneral?.si ?? 0;
+      const totalNo = totalGeneral?.no ?? 0;
+      const totalNs = totalGeneral?.nose ?? 0;
 
       new Chart(document.getElementById('graficoCircular'), {
         type: 'pie',
