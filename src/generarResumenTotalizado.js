@@ -144,3 +144,6 @@ async function generarResumenTotalizado() {
 
   console.log('✅ resumen_totalizado actualizado correctamente');
 }
+
+//exportar este proceso
+export { generarResumenTotalizado };
