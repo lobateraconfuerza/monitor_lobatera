@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Lobatera Más Fuerte </title>
+  <title>Lobatera Más Fuerte</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<script type="module" src="./src/index.js"></script>
+
+  <!-- Cargar Supabase primero -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <!-- Después cargar tu script -->
+  <script type="module" src="./src/index.js"></script>
+</head>  
 <body>
   <header>
     <img src="./assets/logo.png" alt="Logo Lobatera" />
