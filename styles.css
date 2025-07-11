@@ -66,8 +66,6 @@ footer {
   color: #666;
 }
 
-<canvas id="graficoCircular" style="width: 280px; height: 280px;"></canvas>
-
 #grafico-distribucion {
   max-width: 320px;
   margin: auto;
