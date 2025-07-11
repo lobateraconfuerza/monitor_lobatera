@@ -1,6 +1,6 @@
 // Usar el cliente Supabase ya creado en index.html
 import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
-import { generarResumenTotalizado } from './generarResumenTotalizado.js';
+import { generarResumenTotalizado } from './src/generarResumenTotalizado.js';
 
 const supabase = window.supabase;
 
@@ -8,7 +8,7 @@ async function cargarResumen() {
   const { data, error } = await supabase
     .from('resumen_totalizado')
     .select('*')
-    .eq('es_subtotal', false);
+    .order('id', { ascending: true }); // ← respeta el orden natural de Supabase
 
   if (error) {
     console.error('❌ Error cargando datos:', error.message);
@@ -25,10 +25,16 @@ function renderTabla(datos) {
 
   datos.forEach(item => {
     const row = document.createElement('tr');
+
+    // Estilo para subtotales y total general
+    if (item.es_subtotal) {
+      row.classList.add(item.parroquia === '' ? 'total-general' : 'subtotal');
+    }
+
     row.innerHTML = `
       <td>${item.codigo_centro}</td>
       <td>${item.nombre_centro || '—'}</td>
-      <td>${item.parroquia}</td>
+      <td>${item.parroquia || '—'}</td>
       <td>${item.electores}</td>
       <td>${item.encuestados}</td>
       <td>${item.si}</td>
@@ -41,10 +47,14 @@ function renderTabla(datos) {
 }
 
 function renderGraficos(datos) {
-  const centros = datos.map(d => d.nombre_centro || d.codigo_centro);
-  const participacion = datos.map(d => d.porcentaje_participacion);
+  const centros = datos
+    .filter(d => !d.es_subtotal)
+    .map(d => d.nombre_centro || d.codigo_centro);
 
-  // Gráfico de barras
+  const participacion = datos
+    .filter(d => !d.es_subtotal)
+    .map(d => d.porcentaje_participacion);
+
   new Chart(document.getElementById('graficoBarras'), {
     type: 'bar',
     data: {
@@ -69,7 +79,6 @@ function renderGraficos(datos) {
     }
   });
 
-  // Gráfico circular con totales
   const totalSi = datos.reduce((acc, d) => acc + d.si, 0);
   const totalNo = datos.reduce((acc, d) => acc + d.no, 0);
   const totalNs = datos.reduce((acc, d) => acc + d.nose, 0);
@@ -92,7 +101,6 @@ function renderGraficos(datos) {
   });
 }
 
-// Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarResumen();
 
@@ -100,12 +108,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (botonActualizar) {
     botonActualizar.addEventListener('click', async () => {
+      botonActualizar.disabled = true;
       botonActualizar.textContent = '🔄 Actualizando...';
 
       try {
         await generarResumenTotalizado();
         await cargarResumen();
-        botonActualizar.textContent = '✅ Actualizado';
+        botonActualizar.textContent = '✅ Actualizado correctamente';
       } catch (err) {
         console.error('⚠️ Error al actualizar resumen:', err);
         botonActualizar.textContent = '⚠️ Falló actualización';
@@ -113,6 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       setTimeout(() => {
         botonActualizar.textContent = '📡 Actualizar resumen';
+        botonActualizar.disabled = false;
       }, 3000);
     });
   }
