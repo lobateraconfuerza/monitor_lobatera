@@ -8,7 +8,7 @@ async function cargarResumen() {
   const { data, error } = await supabase
     .from('resumen_totalizado')
     .select('*')
-    .order('id', { ascending: true }); // ← respeta el orden natural de Supabase
+    .order('id', { ascending: true });
 
   if (error) {
     console.error('❌ Error cargando datos:', error.message);
