@@ -1,11 +1,13 @@
 // generarResumenTotalizado.js
 
-import supabase from './supabase.js';
+const supabaseUrl = 'https://vziaqtyfjuqhwmfqxqrv.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6aWFxdHlmanVxaHdtZnF4cXJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTE0MTksImV4cCI6MjA2NzI4NzQxOX0.pDEN6Jc7jDOYh-hUGxiOVIVXOCAU--2fg9U_gwgzklg';
 
-export async function generarResumenTotalizado() {
-  console.log('🔄 Actualizando 16 filas en resumen_totalizado');
+const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-  // 1️⃣ Leer registros de centros
+async function generarResumenTotalizado() {
+  console.log('🔄 Actualizando filas en resumen_totalizado');
+
   const { data: centros, error: errCentros } = await supabase
     .from('resumen_totalizado')
     .select('id, codigo_centro, parroquia')
@@ -16,7 +18,6 @@ export async function generarResumenTotalizado() {
     return;
   }
 
-  // 2️⃣ Leer todas las respuestas de participación
   const { data: votosRaw, error: errV } = await supabase
     .from('participacion_bot')
     .select('cedula, respuesta');
@@ -26,7 +27,6 @@ export async function generarResumenTotalizado() {
     return;
   }
 
-  // 3️⃣ Agrupar votos por centro mediante búsqueda directa por cédula
   let votosPorCentro = {};
   let cedulasNoMapeadas = [];
 
@@ -53,13 +53,11 @@ export async function generarResumenTotalizado() {
     if (['si', 'no', 'nose'].includes(r)) votosPorCentro[centro][r]++;
   }
 
-  // 🧾 Mostrar cédulas sin centro asignado
   if (cedulasNoMapeadas.length > 0) {
-    console.warn(`⚠️ ${cedulasNoMapeadas.length} cédulas no fueron asociadas a ningún centro:\n` +
+    console.warn(`⚠️ ${cedulasNoMapeadas.length} cédulas no asociadas:\n` +
       cedulasNoMapeadas.map(c => ` - ${c}`).join('\n'));
   }
 
-  // 4️⃣ Actualizar cada centro en resumen_totalizado
   for (const { id, codigo_centro } of centros) {
     const { count: electCount } = await supabase
       .from('datos')
@@ -82,9 +80,7 @@ export async function generarResumenTotalizado() {
       .update({
         electores: electCount,
         encuestados: total,
-        si,
-        no,
-        nose,
+        si, no, nose,
         porcentaje_participacion: pPart,
         porcentaje_si: pSi,
         porcentaje_no: pNo,
@@ -93,7 +89,6 @@ export async function generarResumenTotalizado() {
       .eq('id', id);
   }
 
-  // 5️⃣ Subtotales por parroquia
   const { data: actualizados } = await supabase
     .from('resumen_totalizado')
     .select('*')
@@ -116,9 +111,7 @@ export async function generarResumenTotalizado() {
       .update({
         electores: elect,
         encuestados: enc,
-        si,
-        no,
-        nose: ns,
+        si, no, nose: ns,
         porcentaje_participacion: elect ? +((enc / elect) * 100).toFixed(2) : 0,
         porcentaje_si: enc ? +((si / enc) * 100).toFixed(2) : 0,
         porcentaje_no: enc ? +((no / enc) * 100).toFixed(2) : 0,
@@ -127,7 +120,6 @@ export async function generarResumenTotalizado() {
       .match({ parroquia: pq, codigo_centro: '0' });
   }
 
-  // 6️⃣ Total general
   const tot = Object.values(agrupado).reduce(
     (acc, v) => ({
       elect: acc.elect + v.elect,
