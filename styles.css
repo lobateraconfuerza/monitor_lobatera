@@ -15,7 +15,10 @@ header {
 header img {
   max-height: 80px;
   margin-bottom: 0.5em;
+  display: block;
+  margin: 0 auto; /* centrado */
 }
+
 
 .subtitulo {
   color: #e0c120;
