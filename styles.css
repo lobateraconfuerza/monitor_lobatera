@@ -100,3 +100,18 @@ footer {
   color: #555;
   font-style: italic;
 }
+
+#termometro-participacion {
+  animation: entradaTermometro 1s ease-in;
+}
+
+@keyframes entradaTermometro {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
