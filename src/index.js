@@ -1,5 +1,6 @@
 // index.js
 // Usar el cliente Supabase ya creado en index.html
+import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
 const supabase = window.supabase;
 
 async function cargarResumen() {
