@@ -9,7 +9,7 @@
     tr.subtotal {
       background-color: #eee;
       font-weight: bold;
-    } 
+    }
     tr.total-general {
       background-color: #ccc;
       font-weight: bold;
@@ -34,10 +34,6 @@
   <main>
     <section id="controles" style="text-align: center; margin: 1em 0;">
       <button id="actualizarResumen">📡 Actualizar resumen</button>
-    </section>
-
-    <section id="indicadores">
-      <!-- Aquí irán los porcentajes generales -->
     </section>
 
     <section id="grafico-participacion">
@@ -71,12 +67,12 @@
     </section>
   </main>
 
-  <footer>
+    <footer>
     <p>📘 Lobatera + Fuerte</p>
   </footer>
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js UMD para compatibilidad directa -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -89,12 +85,11 @@
     );
   </script>
 
-  <!-- Lógica completa embebida -->
+  <!-- Lógica principal embebida -->
   <script type="module">
-    import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
-    import { generarResumenTotalizado } from './generarResumenTotalizado.js'; // ← ruta ajustada
+    import { generarResumenTotalizado } from './generarResumenTotalizado.js';
 
-    const supabase = window.supabase;
+        const supabase = window.supabase;
 
     async function cargarResumen() {
       const { data, error } = await supabase
@@ -160,10 +155,7 @@
           responsive: true,
           plugins: { legend: { display: false } },
           scales: {
-            y: {
-              beginAtZero: true,
-              max: 100
-            }
+            y: { beginAtZero: true, max: 100 }
           }
         }
       });
