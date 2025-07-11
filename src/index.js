@@ -24,7 +24,7 @@ function renderTabla(datos) {
   tbody.innerHTML = '';
 
   datos
-  .sort((a, b) => a.codigo_centro.localeCompare(b.codigo_centro))
+  .sort((a, b) => parseInt(a.codigo_centro) - parseInt(b.codigo_centro))
   .forEach(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
