@@ -23,7 +23,9 @@ function renderTabla(datos) {
   const tbody = document.getElementById('tablaDatos');
   tbody.innerHTML = '';
 
-  datos.forEach(item => {
+  datos
+  .sort((a, b) => a.codigo_centro.localeCompare(b.codigo_centro))
+  .forEach(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${item.codigo_centro}</td>
