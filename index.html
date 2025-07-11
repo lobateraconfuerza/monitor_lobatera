@@ -132,16 +132,23 @@
       });
     }
 
+    let graficoCircularChart;
+    let graficoBarrasChart;
+    
     function renderGraficos(datos) {
+      // ⚙️ Preparar datos para gráfico de barras
       const centros = datos
         .filter(d => !d.es_subtotal)
         .map(d => d.nombre_centro || d.codigo_centro);
-
+    
       const participacion = datos
         .filter(d => !d.es_subtotal)
         .map(d => d.porcentaje_participacion);
-
-      new Chart(document.getElementById('graficoBarras'), {
+    
+      // 🔄 Destruir gráfico de barras anterior si existe
+      if (graficoBarrasChart) graficoBarrasChart.destroy();
+    
+      graficoBarrasChart = new Chart(document.getElementById('graficoBarras'), {
         type: 'bar',
         data: {
           labels: centros,
@@ -159,14 +166,21 @@
           }
         }
       });
-
-      const totalGeneral = datos.find(d => d.parroquia === '' && d.es_subtotal);
-
+    
+      // 🔎 Buscar fila TOTAL GENERAL (por nombre del centro)
+      const totalGeneral = datos.find(d =>
+        typeof d.nombre_centro === 'string' &&
+        d.nombre_centro.trim().toUpperCase().includes('TOTAL GENERAL')
+      );
+    
       const totalSi = totalGeneral?.si ?? 0;
       const totalNo = totalGeneral?.no ?? 0;
       const totalNs = totalGeneral?.nose ?? 0;
-
-      new Chart(document.getElementById('graficoCircular'), {
+    
+      // 🔄 Destruir gráfico circular anterior si existe
+      if (graficoCircularChart) graficoCircularChart.destroy();
+    
+      graficoCircularChart = new Chart(document.getElementById('graficoCircular'), {
         type: 'pie',
         data: {
           labels: ['Sí', 'No', 'No sé'],
@@ -180,6 +194,14 @@
           plugins: { legend: { position: 'bottom' } }
         }
       });
+    
+      // 🧩 Ajustar tamaño visual del canvas (solo si no lo hiciste en el HTML)
+      const canvasCircular = document.getElementById('graficoCircular');
+      if (canvasCircular) {
+        canvasCircular.style.maxWidth = '260px';
+        canvasCircular.style.margin = 'auto';
+        canvasCircular.style.display = 'block';
+      }
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
