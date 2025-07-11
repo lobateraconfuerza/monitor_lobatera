@@ -1,6 +1,6 @@
 // Usar el cliente Supabase ya creado en index.html
 import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
-import { generarResumenTotalizado } from './generarResumenTotalizado.js';
+import { generarResumenTotalizado } from './src/generarResumenTotalizado.js';
 
 const supabase = window.supabase;
 
