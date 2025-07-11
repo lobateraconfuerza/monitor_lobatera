@@ -1,5 +1,6 @@
-// Inicializar cliente Supabase desde CDN
-const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+// index.js
+// Usar el cliente Supabase ya creado en index.html
+const supabase = window.supabase;
 
 async function cargarResumen() {
   const { data, error } = await supabase
@@ -41,6 +42,7 @@ function renderGraficos(datos) {
   const centros = datos.map(d => d.nombre_centro || d.codigo_centro);
   const participacion = datos.map(d => d.porcentaje_participacion);
 
+  // Gráfico de barras
   new Chart(document.getElementById('graficoBarras'), {
     type: 'bar',
     data: {
@@ -65,6 +67,7 @@ function renderGraficos(datos) {
     }
   });
 
+  // Gráfico circular con totales
   const totalSi = datos.reduce((acc, d) => acc + d.si, 0);
   const totalNo = datos.reduce((acc, d) => acc + d.no, 0);
   const totalNs = datos.reduce((acc, d) => acc + d.nose, 0);
@@ -87,5 +90,5 @@ function renderGraficos(datos) {
   });
 }
 
-// Ejecutar al cargar la página
+// Ejecutar todo al cargar la página
 document.addEventListener('DOMContentLoaded', cargarResumen);
