@@ -5,9 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lobatera Más Fuerte</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    tr.subtotal {
+      background-color: #eee;
+      font-weight: bold;
+    }
+    tr.total-general {
+      background-color: #ccc;
+      font-weight: bold;
+    }
+    #actualizarResumen {
+      padding: 0.6em 1em;
+      background: #063970;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <header> 
+  <header>
     <img src="./assets/logo.png" alt="Logo Lobatera" />
     <h1>Resultados del Bot Lobatera + Fuerte</h1>
     <p class="subtitulo">Resumen Gráfico</p>
@@ -15,9 +33,7 @@
 
   <main>
     <section id="controles" style="text-align: center; margin: 1em 0;">
-      <button id="actualizarResumen" style="padding: 0.6em 1em; background: #063970; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-        📡 Actualizar resumen
-      </button>
+      <button id="actualizarResumen">📡 Actualizar resumen</button>
     </section>
 
     <section id="indicadores">
@@ -73,7 +89,131 @@
     );
   </script>
 
-  <!-- Lógica principal (cargar datos, render, botón) -->
-  <script type="module" src="./src/index.js"></script>
+  <!-- Lógica completa embebida -->
+  <script type="module">
+    import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
+    import { generarResumenTotalizado } from './src/generarResumenTotalizado.js';
+
+    const supabase = window.supabase;
+
+    async function cargarResumen() {
+      const { data, error } = await supabase
+        .from('resumen_totalizado')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) {
+        console.error('❌ Error cargando datos:', error.message);
+        return;
+      }
+
+      renderTabla(data);
+      renderGraficos(data);
+    }
+
+    function renderTabla(datos) {
+      const tbody = document.getElementById('tablaDatos');
+      tbody.innerHTML = '';
+
+      datos.forEach(item => {
+        const row = document.createElement('tr');
+
+        if (item.es_subtotal) {
+          row.classList.add(item.parroquia === '' ? 'total-general' : 'subtotal');
+        }
+
+        row.innerHTML = `
+          <td>${item.codigo_centro}</td>
+          <td>${item.nombre_centro || '—'}</td>
+          <td>${item.parroquia || '—'}</td>
+          <td>${item.electores}</td>
+          <td>${item.encuestados}</td>
+          <td>${item.si}</td>
+          <td>${item.no}</td>
+          <td>${item.nose}</td>
+          <td>${item.porcentaje_participacion}%</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderGraficos(datos) {
+      const centros = datos
+        .filter(d => !d.es_subtotal)
+        .map(d => d.nombre_centro || d.codigo_centro);
+
+      const participacion = datos
+        .filter(d => !d.es_subtotal)
+        .map(d => d.porcentaje_participacion);
+
+      new Chart(document.getElementById('graficoBarras'), {
+        type: 'bar',
+        data: {
+          labels: centros,
+          datasets: [{
+            label: '% Participación',
+            data: participacion,
+            backgroundColor: '#063970'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      const totalSi = datos.reduce((acc, d) => acc + d.si, 0);
+      const totalNo = datos.reduce((acc, d) => acc + d.no, 0);
+      const totalNs = datos.reduce((acc, d) => acc + d.nose, 0);
+
+      new Chart(document.getElementById('graficoCircular'), {
+        type: 'pie',
+        data: {
+          labels: ['Sí', 'No', 'No sé'],
+          datasets: [{
+            data: [totalSi, totalNo, totalNs],
+            backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await cargarResumen();
+
+      const botonActualizar = document.getElementById('actualizarResumen');
+
+      if (botonActualizar) {
+        botonActualizar.addEventListener('click', async () => {
+          botonActualizar.disabled = true;
+          botonActualizar.textContent = '🔄 Actualizando...';
+
+          try {
+            await generarResumenTotalizado();
+            await cargarResumen();
+            botonActualizar.textContent = '✅ Actualizado correctamente';
+          } catch (err) {
+            console.error('⚠️ Error al actualizar resumen:', err);
+            botonActualizar.textContent = '⚠️ Falló actualización';
+          }
+
+          setTimeout(() => {
+            botonActualizar.textContent = '📡 Actualizar resumen';
+            botonActualizar.disabled = false;
+          }, 3000);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
