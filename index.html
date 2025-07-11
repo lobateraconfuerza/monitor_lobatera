@@ -14,6 +14,14 @@
       background-color: #ccc;
       font-weight: bold;
     }
+    button#actualizarResumen {
+      padding: 0.6em 1em;
+      background: #063970;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -25,9 +33,7 @@
 
   <main>
     <section id="controles" style="text-align: center; margin: 1em 0;">
-      <button id="actualizarResumen" style="padding: 0.6em 1em; background: #063970; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-        📡 Actualizar resumen
-      </button>
+      <button id="actualizarResumen">📡 Actualizar resumen</button>
     </section>
 
     <section id="indicadores">
@@ -83,7 +89,7 @@
     );
   </script>
 
-  <!-- Cargar script principal -->
+  <!-- Cargar lógica principal desde index.js -->
   <script type="module" src="./src/index.js"></script>
 </body>
 </html>
