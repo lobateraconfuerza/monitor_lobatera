@@ -1,0 +1,58 @@
+// index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lobatera Más Fuerte | Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="../src/dashboard.js"></script>
+</head>
+<body>
+  <header>
+    <img src="../assets/logo.png" alt="Logo Lobatera" />
+    <h1>Sistema Comunitario de Participación</h1>
+    <p class="subtitulo">Resumen gráfico desde Supabase</p>
+  </header>
+
+  <main>
+    <section id="indicadores">
+      <!-- Aquí irán los porcentajes generales -->
+    </section>
+
+    <section id="grafico-participacion">
+      <h2>Participación por Centro</h2>
+      <canvas id="graficoBarras"></canvas>
+    </section>
+
+    <section id="grafico-distribucion">
+      <h2>Distribución General de Respuestas</h2>
+      <canvas id="graficoCircular"></canvas>
+    </section>
+
+    <section id="tabla-centros">
+      <h2>Resumen por Centro</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Centro</th>
+            <th>Parroquia</th>
+            <th>Electores</th>
+            <th>Encuestados</th>
+            <th>Sí</th>
+            <th>No</th>
+            <th>No sé</th>
+            <th>% Participación</th>
+          </tr>
+        </thead>
+        <tbody id="tablaDatos"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>📘 Lobatera Más Fuerte • Monitor Comunitario</p>
+  </footer>
+</body>
+</html>
