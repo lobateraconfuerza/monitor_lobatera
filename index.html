@@ -55,9 +55,17 @@
   </footer>
 
   <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-  <!-- Tu script index.js -->
-  <script type="module" src="./src/index.js"></script>
+<!-- Crear cliente global antes del módulo -->
+<script>
+  window.supabase = supabase.createClient(
+    'https://vziaqtyfjuqhwmfqxqrv.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6aWFxdHlmanVxaHdtZnF4cXJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTE0MTksImV4cCI6MjA2NzI4NzQxOX0.pDEN6Jc7jDOYh-hUGxiOVIVXOCAU--2fg9U_gwgzklg'
+  );
+</script>
+
+<!-- Tu script index.js ahora puede usar window.supabase -->
+<script type="module" src="./src/index.js"></script>
 </body>
 </html>
