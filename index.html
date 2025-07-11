@@ -36,6 +36,14 @@
       <button id="actualizarResumen">📡 Actualizar resumen</button>
     </section>
 
+    <section id="termometro-participacion">
+      <h2>🔎 Termómetro de Participación General</h2>
+      <div class="barra-externa">
+        <div class="barra-interna" id="barraTermometro"></div>
+      </div>
+      <p id="valorTermometro">—%</p>
+    </section>
+
     <section id="grafico-participacion">
       <h2>Participación por Centro</h2>
       <canvas id="graficoBarras"></canvas>
@@ -202,6 +210,15 @@
         canvasCircular.style.margin = 'auto';
         canvasCircular.style.display = 'block';
       }
+    }
+
+    const porcentajeGeneral = totalGeneral?.porcentaje_participacion ?? 0;
+    const barra = document.getElementById('barraTermometro');
+    const texto = document.getElementById('valorTermometro');
+
+    if (barra && texto) {
+      barra.style.width = `${porcentajeGeneral}%`;
+      texto.textContent = `${porcentajeGeneral}% participación`;
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
