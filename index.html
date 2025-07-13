@@ -80,7 +80,7 @@
     <p>📘 Lobatera + Fuerte</p>
   </footer>
 
-  <!-- Chart.js -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <!-- Supabase -->
@@ -98,11 +98,8 @@
 <script src="./generarResumenTotalizado.js"></script>
 
 <!-- Lógica principal sin 'type="module"' -->
-<script> // type="module"
-    //import { generarResumenTotalizado } from './generarResumenTotalizado.js';
-
-        const supabase = window.supabase;
-
+<script>
+    const supabase = window.supabase;
     async function cargarResumen() {
       const { data, error } = await supabase
         .from('resumen_totalizado')
