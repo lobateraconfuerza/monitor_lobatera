@@ -101,8 +101,7 @@
 <script>
     //const supabase = window.supabase;
     async function cargarResumen() {
-      const { data, error } = await supabase
-        .from('resumen_totalizado')
+      const { data, error } = await window.supabase.from('resumen_totalizado')
         .select('*')
         .order('id', { ascending: true });
 
