@@ -1,13 +1,6 @@
 // generarResumenTotalizado.js
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  'https://vziaqtyfjuqhwmfqxqrv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6aWFxdHlmanVxaHdtZnF4cXJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTE0MTksImV4cCI6MjA2NzI4NzQxOX0.pDEN6Jc7jDOYh-hUGxiOVIVXOCAU--2fg9U_gwgzklg'
-);
-
-export default supabase;
+const supabase = window.supabase;
 
 export async function generarResumenTotalizado() {
   console.log('🔄 Actualizando 16 filas en resumen_totalizado');
