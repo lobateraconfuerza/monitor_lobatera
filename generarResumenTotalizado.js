@@ -156,4 +156,3 @@ export async function generarResumenTotalizado() {
 
   console.log('✅ resumen_totalizado actualizado correctamente');
 }
-
