@@ -80,24 +80,25 @@
     <p>📘 Lobatera + Fuerte</p>
   </footer>
 
-  <!-- Chart.js UMD para compatibilidad directa -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-  <!-- Inicializar cliente Supabase -->
-  <script>
-    window.supabase = supabase.createClient(
-      'https://vziaqtyfjuqhwmfqxqrv.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6aWFxdHlmanVxaHdtZnF4cXJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTE0MTksImV4cCI6MjA2NzI4NzQxOX0.pDEN6Jc7jDOYh-hUGxiOVIVXOCAU--2fg9U_gwgzklg'
-    );
-  </script>
+<!-- Inicializar cliente Supabase -->
+<script>
+  window.supabase = supabase.createClient(
+    'https://vziaqtyfjuqhwmfqxqrv.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6aWFxdHlmanVxaHdtZnF4cXJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTE0MTksImV4cCI6MjA2NzI4NzQxOX0.pDEN6Jc7jDOYh-hUGxiOVIVXOCAU--2fg9U_gwgzklg'
+  );
+</script>
 
-  <script src="./generarResumenTotalizado.js"></script>
+<!-- Función global generarResumenTotalizado -->
+<script src="./generarResumenTotalizado.js"></script>
 
-  <!-- Lógica principal embebida -->
-  <script> // type="module"
+<!-- Lógica principal sin 'type="module"' -->
+<script> // type="module"
     //import { generarResumenTotalizado } from './generarResumenTotalizado.js';
 
         const supabase = window.supabase;
