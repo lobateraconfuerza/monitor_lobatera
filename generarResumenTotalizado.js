@@ -2,7 +2,8 @@
 
 const supabase = window.supabase;
 
-export async function generarResumenTotalizado() {
+window.generarResumenTotalizado = async function () {
+
   console.log('🔄 Actualizando 16 filas en resumen_totalizado');
 
   // 1️⃣ Leer registros de centros
