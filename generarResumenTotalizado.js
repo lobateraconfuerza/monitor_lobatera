@@ -154,4 +154,19 @@ window.generarResumenTotalizado = async function () {
     .match({ parroquia: '', codigo_centro: '0' });
 
   console.log('✅ resumen_totalizado actualizado correctamente');
-}
+
+  // 7️⃣ Validar campo 'nose' actualizado correctamente
+  const { data: validaciones, error: errorVal } = await supabase
+    .from('resumen_totalizado')
+    .select('parroquia, codigo_centro, nose')
+    .in('codigo_centro', ['0']);
+
+  if (errorVal) {
+    console.warn('⚠️ Error validando campo "nose":', errorVal.message);
+  } else {
+    console.log('🔎 Validación de valores "nose" por subtotales y total:');
+    validaciones.forEach(registro => {
+      console.log(`↪️ ${registro.parroquia || 'Total General'} ➤ nose=${registro.nose}`);
+    });
+  }
+};
