@@ -1,7 +1,5 @@
 // generarResumenTotalizado.js
 
-const supabase = window.supabase;
-
 window.generarResumenTotalizado = async function () {
 
   console.log('🔄 Actualizando 16 filas en resumen_totalizado');
